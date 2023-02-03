@@ -1,5 +1,9 @@
 package com.example;
 
-public interface BankService {
-	void pay(String id, double amount);
+public class BankService implements BankServiceinterface{
+
+    @Override
+    public void pay(String id, double amount) {
+
+    }
 }
