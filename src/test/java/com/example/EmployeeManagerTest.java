@@ -24,17 +24,20 @@ class EmployeeManagerTest {
     public EmployeeRepositoryinterface employeeRepositoryinterface;
 
     public EmployeeManager employeeManager;
+
+    public BankServiceDummy bankServiceDummy;
     public static List<Employee> employees = new ArrayList<>();
 
 
     @BeforeAll
     public void initialize() {
-        this.bankServiceinterface = mock(BankServiceinterface.class);
+        //this.bankServiceinterface = mock(BankServiceinterface.class);
         this.employeeRepositoryinterface = Mockito.mock(EmployeeRepositoryinterface.class);
-        this.employeeManager = new EmployeeManager(employeeRepositoryinterface, bankServiceinterface);
+        this.bankServiceDummy = new BankServiceDummy();
+        this.employeeManager = new EmployeeManager(employeeRepositoryinterface, bankServiceDummy);
 
-        employees.add(new Employee("Emma", 45000));
-        employees.add(new Employee("Aaron", 44000));
+        employees.add(new Employee("1", 45000));
+        employees.add(new Employee("2", 44000));
 
     }
 
@@ -45,5 +48,27 @@ class EmployeeManagerTest {
         assertEquals(2, employeeManager.payEmployees());
     }
 
+    @Test
+    public void payEmployeesShouldFailBecauseNoEmployees(){
+        when(employeeManager.payEmployees() == 0).thenThrow(RuntimeException.class);
+        assertEquals(0, employeeManager.payEmployees());
+    }
+
+
+    @Test
+    public void checkIfSpecificEmployeeIsPaidShouldWorkWithBankServiceDummy(){
+        Employee emma = new Employee("5",15000);
+        employees.add(emma);
+        when(employeeRepositoryinterface.findAll()).thenReturn(employees);
+        employeeManager.payEmployees();
+        assertTrue(emma.isPaid());
+
+    }
+
+    @Test
+    public void allEmployeesShouldBePaidByUsingDummiesOnly(){
+        EmployeeManager employeeManager1 = new EmployeeManager(new EmployeeRepositoryStub(), bankServiceDummy);
+        assertTrue(employeeManager1.payEmployees() == 3);
+    }
 
 }

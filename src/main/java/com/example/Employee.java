@@ -11,6 +11,10 @@ public class Employee {
 		this.salary = salary;
 	}
 
+	public Employee(String id, double salary, boolean isPaid){
+		this.paid = isPaid;
+	}
+
 	public String getId() {
 		return id;
 	}
