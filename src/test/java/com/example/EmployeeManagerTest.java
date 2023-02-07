@@ -19,7 +19,6 @@ import static org.mockito.Mockito.when;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class EmployeeManagerTest {
 
-    public BankServiceinterface bankServiceinterface;
 
     public EmployeeRepositoryinterface employeeRepositoryinterface;
 
@@ -31,7 +30,6 @@ class EmployeeManagerTest {
 
     @BeforeAll
     public void initialize() {
-        //this.bankServiceinterface = mock(BankServiceinterface.class);
         this.employeeRepositoryinterface = Mockito.mock(EmployeeRepositoryinterface.class);
         this.bankServiceDummy = new BankServiceDummy();
         this.employeeManager = new EmployeeManager(employeeRepositoryinterface, bankServiceDummy);
@@ -50,7 +48,7 @@ class EmployeeManagerTest {
 
     @Test
     public void payEmployeesShouldFailBecauseNoEmployees(){
-        when(employeeManager.payEmployees() == 0).thenThrow(RuntimeException.class);
+        when(employeeRepositoryinterface.findAll().isEmpty()).thenThrow(RuntimeException.class);
         assertEquals(0, employeeManager.payEmployees());
     }
 
@@ -68,7 +66,7 @@ class EmployeeManagerTest {
     @Test
     public void allEmployeesShouldBePaidByUsingDummiesOnly(){
         EmployeeManager employeeManager1 = new EmployeeManager(new EmployeeRepositoryStub(), bankServiceDummy);
-        assertTrue(employeeManager1.payEmployees() == 3);
+        assertEquals(3, employeeManager1.payEmployees());
     }
 
 }
