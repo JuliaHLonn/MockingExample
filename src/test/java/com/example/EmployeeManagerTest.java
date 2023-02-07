@@ -1,9 +1,7 @@
 package com.example;
 
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -16,6 +14,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class EmployeeManagerTest {
 
 
@@ -33,14 +32,15 @@ class EmployeeManagerTest {
         this.bankServiceDummy = new BankServiceDummy();
         this.employeeManager = new EmployeeManager(employeeRepositoryinterface, bankServiceDummy);
 
-        employees.add(new Employee("1", 45000));
-        employees.add(new Employee("2", 44000));
+
 
     }
 
     @Test
+    @Order(1)
     public void payEmployeeShouldBeSuccessful() {
-
+        employees.add(new Employee("1", 45000));
+        employees.add(new Employee("2", 44000));
         when(employeeRepositoryinterface.findAll()).thenReturn(employees);
         assertEquals(2, employeeManager.payEmployees());
     }
@@ -55,7 +55,8 @@ class EmployeeManagerTest {
 
 
     @Test
-    public void checkIfSpecificEmployeeIsPaidShouldWorkWithBankServiceDummy() {
+    @Order(2)
+    public void checkIfSpecificEmployeeIsPaid() {
         Employee emma = new Employee("5", 15000);
         employees.add(emma);
         when(employeeRepositoryinterface.findAll()).thenReturn(employees);
